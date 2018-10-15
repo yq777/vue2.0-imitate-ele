@@ -29,6 +29,9 @@
                   <span class="u-now">￥{{food.price}}</span>
                   <span class="u-old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="g-cart-wrap">
+                  <cart-controll :food="food"></cart-controll>
+                </div>
               </div>
             </li>
           </ul>
@@ -42,12 +45,14 @@
 <script>
   import {getGoods, getSellers} from "../../api/index";
   import BScroll from "better-scroll";
-  import ShopCar from "../shop-car/index.vue"
+  import ShopCar from "../shop-car/index.vue";
+  import CartControll from "../../components/cartcontroller/cartcontroller.vue"
 
   const ERR_OK = 0;
   export default {
     components: {
-      ShopCar
+      ShopCar,
+      CartControll
     },
     data() {
       return {
