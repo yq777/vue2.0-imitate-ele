@@ -2,7 +2,8 @@
   <div class="goods-page">
     <div class='g-menu' ref="menuwrapper">
       <ul>
-        <li v-for="(item,index) in goods" @click="selectMenu(index,$event)" :class="{current:currentIndex === index}" :key="index" class="m-menu-item">
+        <li v-for="(item,index) in goods" @click="selectMenu(index,$event)" :class="{current:currentIndex === index}"
+            :key="index" class="m-menu-item">
           <div class="m-text border-px">
             <span v-show="item.type>0" class="u-icon" :class="classMap[item.type]"></span>{{item.name}}
           </div>
@@ -14,7 +15,8 @@
         <li v-for="(item,index) in goods" :key="index" class="m-food-list food-list-hook">
           <h1 class="u-title">{{item.name}}</h1>
           <ul>
-            <li v-for="(food,foodIndex) in item.foods" :key="foodIndex" class="m-food-item border-px" :class="{last_child:foodIndex === (item.foods.length-1)}">
+            <li v-for="(food,foodIndex) in item.foods" :key="foodIndex" class="m-food-item border-px"
+                :class="{last_child:foodIndex === (item.foods.length-1)}">
               <div class="m-icon">
                 <img :src="food.icon" width="57px" height="57px"/>
               </div>
@@ -106,6 +108,7 @@
           click: true
         });
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          click: true,
           probeType: 3
         });
         this.foodsScroll.on("scroll", (pos) => {
@@ -251,6 +254,11 @@
                 text-decoration: line-through;
                 color: rgb(147, 153, 159)
               }
+            }
+            .g-cart-wrap {
+              position: absolute;
+              right: 0;
+              bottom: 12px;
             }
           }
         }
