@@ -32,7 +32,7 @@
                   <span class="u-old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="g-cart-wrap">
-                  <cart-controll :food="food"></cart-controll>
+                  <cart-controll :food="food" @add-cart="getCart"></cart-controll>
                 </div>
               </div>
             </li>
@@ -40,7 +40,7 @@
         </li>
       </ul>
     </div>
-    <shop-car :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-car>
+    <shop-car ref="shopCart" :selectedFood="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-car>
   </div>
 </template>
 
@@ -77,6 +77,17 @@
           }
         }
         return 0;
+      },
+      selectFoods() {
+        let foods = [];
+        this.goods.forEach(good => {
+          good.foods.forEach(food => {
+            if (food.count) {
+              foods.push(food);
+            }
+          })
+        });
+        return foods;
       }
     },
     created() {
@@ -131,6 +142,12 @@
         let foodList = this.$refs.foodsWrapper.getElementsByClassName("food-list-hook");
         let el = foodList[index];
         this.foodsScroll.scrollToElement(el, 300);
+      },
+      getCart(target) {
+        this._drop(target);
+      },
+      _drop(target) {
+        this.$refs.shopCart.drop(target);
       }
     }
   }

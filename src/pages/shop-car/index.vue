@@ -21,6 +21,14 @@
         去结算
       </div>
     </div>
+    <div class="g-ball-wrap">
+      <transition name="drop">
+        <div>
+          <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball"></div>
+          <div class="inner"></div>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -28,15 +36,7 @@
   export default {
     props: {
       selectedFood: {
-        type: Array,
-        default() {
-          return [
-            {
-              price: 30,
-              count: 1
-            }
-          ];
-        }
+        type: Array
       },
       deliveryPrice: {
         type: Number
@@ -46,7 +46,25 @@
       }
     },
     data() {
-      return {}
+      return {
+        balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+        ]
+      }
     },
     computed: {
       totalPrice() {
@@ -66,7 +84,11 @@
     },
     created() {
     },
-    methods: {}
+    methods: {
+      drop(el) {
+        console.log(el);
+      }
+    }
   }
 </script>
 
@@ -170,6 +192,30 @@
       &.highlight {
         background: #00b43c;
         color: #fff;
+      }
+    }
+    .g-ball-wrap {
+      .drop-enter, drop-leave-to {
+        opacity: 1;
+        transform: translate3D(0, 0, 0);
+      }
+      .drop-enter-active, .drop-leave-active {
+        opacity: 0;
+        transform: translate3D(24px, 0, 0);
+      }
+      .ball {
+        position: fixed;
+        left: 32px;
+        bottom: 22px;
+        z-index: 200;
+        transition: all 0.4s;
+      }
+      .inner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgb(0, 160, 220);
+        transition: all 0.4s
       }
     }
   }
