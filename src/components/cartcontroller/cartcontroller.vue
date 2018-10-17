@@ -1,13 +1,11 @@
 <template>
-  <div class="cart-controll-page">
+  <div class="cart-control-page">
     <transition name="move">
       <div class="g-cart-decrease" v-show="food.count>0" @click="decreaseCart">
         <span class="m-inner icon-remove_circle_outline"></span>
       </div>
     </transition>
-    <transition name="move">
-      <div class="g-count" v-show="food.count>0">{{food.count}}</div>
-    </transition>
+    <div class="g-count" v-show="food.count>0">{{food.count}}</div>
     <div class="g-cart-add icon-add_circle" @click="addCart"></div>
   </div>
 </template>
@@ -49,21 +47,40 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .cart-controll-page {
+  .cart-control-page {
     font-size: 0;
     .move-enter, move-leave-to {
-      opacity: 1;
-      transform: translate3D(0, 0, 0);
-    }
-    .move-enter-active, .move-leave-active {
       opacity: 0;
-      transform: translate3D(24px, 0, 0);
+    }
+    .move-enter-active {
+      opacity: 1;
+      transition: all .4s linear;
+      animation: decreaseEnter .4s linear;
+    }
+    .move-leave-active {
+      opacity: 1;
+      transition: all .4s linear;
+      animation: decreaseLeave .4s linear;
     }
 
+    @keyframes decreaseEnter {
+      0% {
+        transform: translate3d(24px, 0, 0) rotate(180deg);
+      }
+      100% {
+        transform: translate3d(0, 0, 0) rotate(0);
+      }
+    } @keyframes decreaseLeave {
+        0% {
+          transform: translate3d(0, 0, 0) rotate(0);
+        }
+        100% {
+          transform: translate3d(24px, 0, 0) rotate(180deg);
+        }
+      }
     .g-cart-decrease {
       display: inline-block;
       padding: 6px;
-      transition: all 0.4s linear;
       .m-inner {
         display: inline-block
         font-size: 24px;
@@ -80,7 +97,6 @@
       text-align: center;
       font-size: 10px;
       color: rgb(147, 153, 159);
-      transition: all 0.4s linear;
     }
     .g-cart-add {
       display: inline-block;

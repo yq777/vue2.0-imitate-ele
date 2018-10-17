@@ -1,6 +1,6 @@
 <template>
   <div class="shopcar-page">
-    <div class="g-content-wrap">
+    <div class="g-content-wrap" @click="toggleList">
       <div class="m-content-left">
         <div class="m-logo-wrap">
           <div class="m-logo" :class="{higlight:totalCount !== 0}">
@@ -22,18 +22,46 @@
       </div>
     </div>
     <div class="g-ball-wrap">
-      <transition name="drop">
-        <div>
-          <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball"></div>
-          <div class="inner"></div>
+      <transition-group name="drop"
+                        @before-enter="beforeEnter"
+                        @enter="enter"
+                        @after-enter="afterEnter">
+        <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball">
+          <div class="inner inner-hook"></div>
         </div>
-      </transition>
+      </transition-group>
     </div>
+    <transition name="fold">
+      <div class="g-shopcart-list" v-show="listShow">
+        <div class="m-list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="m-list-content">
+          <ul class="g-lists">
+            <li class="m-list-item" v-for="(food,index) in selectedFood" :key="index">
+              <span class="u-name">{{food.name}}</span>
+              <div class="m-price">
+                <span class="u-price">￥{{food.price * food.count}}</span>
+              </div>
+              <div class="m-cart-wrapper">
+                <cart-controller :food="food"></cart-controller>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+  import CartController from "../../components/cartcontroller/cartcontroller.vue"
+
   export default {
+    components: {
+      CartController
+    },
     props: {
       selectedFood: {
         type: Array
@@ -63,7 +91,9 @@
           {
             show: false
           }
-        ]
+        ],
+        dropBalls: [],
+        fold: false
       }
     },
     computed: {
@@ -80,19 +110,77 @@
           count += item.count;
         });
         return count;
+      },
+      listShow() {
+        if (!this.totalCount) {
+          this.fold = true;
+          return false;
+        }
+        return !this.fold;
       }
     },
     created() {
     },
     methods: {
       drop(el) {
-        console.log(el);
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i];
+          if (!ball.show) {
+            ball.show = true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            return;
+          }
+        }
+      },
+      beforeEnter(el) {
+        let count = this.balls.length;
+        while (count--) {
+          let ball = this.balls[count];
+          if (ball.show) {
+            let rect = ball.el.getBoundingClientRect();
+            let x = rect.left - 32;
+            let y = -(window.innerHeight - rect.top - 22);
+            el.style.display = '';
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+            el.style.transform = `translate3d(0,${y}px,0)`;
+            let inner = el.getElementsByClassName('inner-hook')[0];
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+            inner.style.transform = `translate3d(${x}px,0,0)`;
+          }
+        }
+      },
+      enter(el, done) {
+        /**/
+        let rf = el.offsetHeight;
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)';
+          el.style.transform = 'translate3d(0,0,0)';
+          let inner = el.getElementsByClassName('inner-hook')[0];
+          inner.style.webkitTransform = 'translate3d(0,0,0)';
+          inner.style.transform = 'translate3d(0,0,0)';
+          el.addEventListener('transitionend', done);
+        });
+      },
+      afterEnter(el) {
+        let ball = this.dropBalls.shift();
+        if (ball) {
+          ball.show = false;
+          el.style.display = 'none';
+        }
+      },
+      toggleList() {
+        if (!this.totalCount) {
+          return;
+        }
+        this.fold = !this.fold;
       }
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin.styl"
   .shopcar-page {
     position: fixed;
     left: 0;
@@ -194,28 +282,109 @@
         color: #fff;
       }
     }
+    .drop-enter-active {
+      transition: all 1s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+    }
     .g-ball-wrap {
-      .drop-enter, drop-leave-to {
-        opacity: 1;
-        transform: translate3D(0, 0, 0);
-      }
-      .drop-enter-active, .drop-leave-active {
-        opacity: 0;
-        transform: translate3D(24px, 0, 0);
-      }
       .ball {
         position: fixed;
         left: 32px;
         bottom: 22px;
         z-index: 200;
-        transition: all 0.4s;
+        .inner {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: rgb(0, 160, 220);
+          transition: all 1s linear;
+        }
       }
-      .inner {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: rgb(0, 160, 220);
-        transition: all 0.4s
+    }
+    .fold-enter-active {
+      animation-name: foldOut;
+      animation-duration: .4s;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+    }
+    .fold-leave-active {
+      animation-name: foldIn;
+      animation-duration: .4s;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+    }
+    @keyframes foldOut {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(0, -100%);
+      }
+    } @keyframes foldIn {
+        0% {
+          transform: translate(0, -100%);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+    .g-shopcart-list {
+      position: absolute;
+      left: 0;
+      bottom: 47px;
+      z-index: -1;
+      width: 100%;
+      max-height: 65vh;
+      .m-list-header {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 18px;
+        background: #f3f5f7;
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+        .title {
+          float: left;
+          font-size: 14px;
+          color: rgb(7, 17, 27);
+        }
+        .empty {
+          float: right;
+          font-size: 12px;
+          color: rgb(0, 160, 220);
+        }
+      }
+      .m-list-content {
+        padding: 0 18px;
+        overflow: hidden;
+        background: #fff;
+        .g-lists {
+          .m-list-item {
+            position: relative;
+            padding: 12px 0;
+            box-sizing: border-box;
+            border-px(1px, rgba(7, 17, 27, 0.1));
+            .u-name {
+              line-height: 24px;
+              font-size: 14px;
+              color: rgb(7, 17, 27);
+            }
+            .m-price {
+              position: absolute;
+              right: 90px;
+              bottom: 12px;
+              line-height: 24px;
+              font-size: 14px;
+              font-weight: 700;
+              color: rgb(240, 20, 20);
+              .u-price {
+
+              }
+            }
+            .m-cart-wrapper {
+              position: absolute;
+              right: 0;
+              bottom: 6px;
+            }
+          }
+        }
       }
     }
   }
