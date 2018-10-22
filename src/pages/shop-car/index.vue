@@ -17,7 +17,8 @@
       <div v-if="totalPrice<minPrice && totalPrice !==0" class="m-content-right">
         还差￥{{minPrice - totalPrice}}元起送
       </div>
-      <div v-if="totalPrice>=minPrice" class="m-content-right" :class="{highlight:totalPrice>=minPrice}">
+      <div v-if="totalPrice>=minPrice" class="m-content-right" @click.stop="pay"
+           :class="{highlight:totalPrice>=minPrice}">
         去结算
       </div>
     </div>
@@ -35,9 +36,9 @@
       <div class="g-shopcart-list" v-show="listShow">
         <div class="m-list-header">
           <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
+          <span class="empty" @click="empty">清空</span>
         </div>
-        <div class="m-list-content">
+        <div ref="listContent" class="m-list-content">
           <ul class="g-lists">
             <li class="m-list-item" v-for="(food,index) in selectedFood" :key="index">
               <span class="u-name">{{food.name}}</span>
@@ -52,11 +53,15 @@
         </div>
       </div>
     </transition>
+    <transition name="fade">
+      <div class="m-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
   </div>
 </template>
 
 <script>
-  import CartController from "../../components/cartcontroller/cartcontroller.vue"
+  import CartController from "../../components/cartcontroller/cartcontroller.vue";
+  import BScroll from "better-scroll";
 
   export default {
     components: {
@@ -116,6 +121,17 @@
           this.fold = true;
           return false;
         }
+        if (this.fold) {
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              })
+            } else {
+              this.scroll.refresh();
+            }
+          })
+        }
         return !this.fold;
       }
     },
@@ -174,6 +190,20 @@
           return;
         }
         this.fold = !this.fold;
+      },
+      empty() {
+        this.selectedFood.forEach(item => {
+          item.count = 0;
+        })
+      },
+      hideList() {
+        this.fold = true;
+      },
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return false;
+        }
+        window.alert(`支付${this.totalPrice}元`)
       }
     }
   }
@@ -300,40 +330,20 @@
         }
       }
     }
-    .fold-enter-active {
-      animation-name: foldOut;
-      animation-duration: .4s;
-      animation-fill-mode: both;
-      animation-timing-function: linear;
-    }
-    .fold-leave-active {
-      animation-name: foldIn;
-      animation-duration: .4s;
-      animation-fill-mode: both;
-      animation-timing-function: linear;
-    }
-    @keyframes foldOut {
-      0% {
-        transform: translate(0, 0);
-      }
-      100% {
-        transform: translate(0, -100%);
-      }
-    } @keyframes foldIn {
-        0% {
-          transform: translate(0, -100%);
-        }
-        100% {
-          transform: translate(0, 0);
-        }
-      }
     .g-shopcart-list {
       position: absolute;
       left: 0;
-      bottom: 47px;
+      top: 0;
       z-index: -1;
       width: 100%;
-      max-height: 65vh;
+      transform: translate3d(0, -100%, 0);
+      &.fold-enter-active, &.fold-leave-active {
+        transition: all 0.5s
+        transform: translate3d(0, -100%, 0)
+      }
+      &.fold-enter, &.fold-leave-active {
+        transform: translate3d(0, 0, 0)
+      }
       .m-list-header {
         height: 40px;
         line-height: 40px;
@@ -353,8 +363,9 @@
       }
       .m-list-content {
         padding: 0 18px;
-        overflow: hidden;
         background: #fff;
+        max-height: 45vh;
+        overflow: hidden;
         .g-lists {
           .m-list-item {
             position: relative;
@@ -385,6 +396,25 @@
             }
           }
         }
+      }
+    }
+    .m-mask {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      z-index: -2;
+      backdrop-filter: blur(10px);
+      background-color: rgba(7, 17, 27, 0.6);
+      &.fade-enter-active, &.fade-leave-active {
+        transition: all 0.5s;
+        opacity: 1;
+        background-color: rgba(7, 17, 27, 0.6);
+      }
+      &.fade-enter, &.fade-leave-to {
+        opacity: 0;
+        background-color: rgba(7, 17, 27, 0);
       }
     }
   }

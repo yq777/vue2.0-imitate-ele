@@ -12,7 +12,8 @@
     </div>
     <div class="g-foods" ref="foodsWrapper">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="m-food-list food-list-hook">
+        <li v-for="(item,index) in goods" :key="index" class="m-food-list food-list-hook"
+            @click="selectFood(item,$event)">
           <h1 class="u-title">{{item.name}}</h1>
           <ul>
             <li v-for="(food,foodIndex) in item.foods" :key="foodIndex" class="m-food-item border-px"
@@ -40,7 +41,9 @@
         </li>
       </ul>
     </div>
-    <shop-car ref="shopCart" :selectedFood="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-car>
+    <shop-car ref="shopCart" :selectedFood="selectFoods" :deliveryPrice="seller.deliveryPrice"
+              :minPrice="seller.minPrice"></shop-car>
+    <food :food="selectedFood"></food>
   </div>
 </template>
 
@@ -48,13 +51,15 @@
   import {getGoods, getSellers} from "../../api/index";
   import BScroll from "better-scroll";
   import ShopCar from "../shop-car/index.vue";
+  import Food from "../food/food.vue"
   import CartControll from "../../components/cartcontroller/cartcontroller.vue"
 
   const ERR_OK = 0;
   export default {
     components: {
       ShopCar,
-      CartControll
+      CartControll,
+      Food
     },
     data() {
       return {
@@ -64,7 +69,8 @@
         meunScroll: {},
         foodsScrool: {},
         listHeight: [],
-        scrollY: 0
+        scrollY: 0,
+        selectedFood: {}
       }
     },
     computed: {
@@ -107,6 +113,12 @@
           }
         })
       },
+      selectFood(item, event) {
+        if (event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
+      },
       _getSellers() {
         getSellers().then(res => {
           if (res.errno === ERR_OK) {
@@ -147,7 +159,9 @@
         this._drop(target);
       },
       _drop(target) {
-        this.$refs.shopCart.drop(target);
+        this.$nextTick(() => {
+          this.$refs.shopCart.drop(target);
+        });
       }
     }
   }
