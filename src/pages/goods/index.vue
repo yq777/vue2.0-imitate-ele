@@ -12,11 +12,10 @@
     </div>
     <div class="g-foods" ref="foodsWrapper">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="m-food-list food-list-hook"
-            @click="selectFood(item,$event)">
+        <li v-for="(item,index) in goods" :key="index" class="m-food-list food-list-hook">
           <h1 class="u-title">{{item.name}}</h1>
           <ul>
-            <li v-for="(food,foodIndex) in item.foods" :key="foodIndex" class="m-food-item border-px"
+            <li v-for="(food,foodIndex) in item.foods" @click="selectFood(food,$event)" :key="foodIndex" class="m-food-item border-px"
                 :class="{last_child:foodIndex === (item.foods.length-1)}">
               <div class="m-icon">
                 <img :src="food.icon" width="57px" height="57px"/>
@@ -43,7 +42,7 @@
     </div>
     <shop-car ref="shopCart" :selectedFood="selectFoods" :deliveryPrice="seller.deliveryPrice"
               :minPrice="seller.minPrice"></shop-car>
-    <food :food="selectedFood"></food>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -114,10 +113,12 @@
         })
       },
       selectFood(item, event) {
-        if (event._constructed) {
+        if (!event._constructed) {
           return;
         }
-        this.selectedFood = food;
+        this.selectedFood = item;
+        console.log(this.selectedFood);
+        this.$refs.food.show();
       },
       _getSellers() {
         getSellers().then(res => {
