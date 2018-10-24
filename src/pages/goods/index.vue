@@ -42,7 +42,7 @@
     </div>
     <shop-car ref="shopCart" :selectedFood="selectFoods" :deliveryPrice="seller.deliveryPrice"
               :minPrice="seller.minPrice"></shop-car>
-    <food :food="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food" @add-cart="getCart"></food>
   </div>
 </template>
 
@@ -117,7 +117,6 @@
           return;
         }
         this.selectedFood = item;
-        console.log(this.selectedFood);
         this.$refs.food.show();
       },
       _getSellers() {

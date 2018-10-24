@@ -1,12 +1,12 @@
 <template>
   <div class="cart-control-page">
     <transition name="move">
-      <div class="g-cart-decrease" v-show="food.count>0" @click="decreaseCart">
+      <div class="g-cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
         <span class="m-inner icon-remove_circle_outline"></span>
       </div>
     </transition>
     <div class="g-count" v-show="food.count>0">{{food.count}}</div>
-    <div class="g-cart-add icon-add_circle" @click="addCart"></div>
+    <div class="g-cart-add icon-add_circle" @click.stop.prevent="addCart"></div>
   </div>
 </template>
 
@@ -70,14 +70,16 @@
       100% {
         transform: translate3d(0, 0, 0) rotate(0);
       }
-    } @keyframes decreaseLeave {
+    }
+
+    @keyframes decreaseLeave {
         0% {
           transform: translate3d(0, 0, 0) rotate(0);
         }
         100% {
           transform: translate3d(24px, 0, 0) rotate(180deg);
         }
-      }
+    }
     .g-cart-decrease {
       display: inline-block;
       padding: 6px;

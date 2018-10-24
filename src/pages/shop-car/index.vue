@@ -46,7 +46,7 @@
                 <span class="u-price">￥{{food.price * food.count}}</span>
               </div>
               <div class="m-cart-wrapper">
-                <cart-controller :food="food"></cart-controller>
+                <cart-controller :food="food" ></cart-controller>
               </div>
             </li>
           </ul>
