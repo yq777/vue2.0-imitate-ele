@@ -1,11 +1,11 @@
 <template>
   <div class="rating-select-page">
     <div class="g-rating-type border-px">
-      <span class="m-type positive" :class="{active:selectType===ratingSelect.ALL}">{{desc.all}}<span class="m-count">47</span></span>
-      <span class="m-type positive" :class="{active:selectType===ratingSelect.POSITIVE}">{{desc.positive}}<span class="m-count">47</span></span>
-      <span class="m-type negative" :class="{active:selectType===ratingSelect.NEGATIVE}">{{desc.negative}}<span class="m-count">47</span></span>
+      <span class="m-type positive" @click="select(2,$event)" :class="{active:type===ratingSelect.ALL}">{{desc.all}}<span class="m-count">{{ratings.length}}</span></span>
+      <span class="m-type positive" @click="select(0,$event)" :class="{active:type===ratingSelect.POSITIVE}">{{desc.positive}}<span class="m-count">{{positives.length}}</span></span>
+      <span class="m-type negative" @click="select(1,$event)" :class="{active:type===ratingSelect.NEGATIVE}">{{desc.negative}}<span class="m-count">{{negatives.length}}</span></span>
     </div>
-    <div class="g-switch">
+    <div class="g-switch" @click="toggleContent($event)" :class="{on:content}">
       <i class="icon-check_circle"></i>
       <span class="u-text">只看有内容的评价</span>
     </div>
@@ -44,12 +44,49 @@
     },
     data() {
       return {
-        ratingSelect
+        ratingSelect,
+        type: this.selectType,
+        content: this.onlyContent
+      }
+    },
+    computed: {
+      positives() {
+        return this.ratings.filter(item => {
+          return item.rateType === this.ratingSelect.POSITIVE;
+        })
+      },
+      negatives() {
+        return this.ratings.filter(item => {
+          return item.rateType === this.ratingSelect.NEGATIVE;
+        })
+      }
+    },
+    watch: {
+      selectType(val) {
+        this.type = val;
+      },
+      onlyContent(val) {
+        this.content = val;
       }
     },
     created() {
     },
-    methods: {}
+    methods: {
+      select(type, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.type = type;
+        this.$emit('rating-type', this.type);
+      },
+      toggleContent(event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.content = !this.content;
+        this.$emit('content-toggle', this.content);
+      }
+    }
   }
 </script>
 
@@ -90,8 +127,24 @@
       }
     }
     .g-switch {
+      padding: 12px 18px;
+      line-height: 24px;
+      font-size: 0;
+      color: rgb(147, 153, 159);
+      border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+      &.on {
+        .icon-check_circle {
+          color: #00c850;
+        }
+      }
+      .icon-check_circle {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 24px;
+        margin-right: 4px;
+      }
       .u-text {
-
+        font-size: 12px;
       }
     }
   }

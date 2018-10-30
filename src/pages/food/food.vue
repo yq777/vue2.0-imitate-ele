@@ -32,7 +32,25 @@
         <split v-show="food.ratings"></split>
         <div class="g-rating">
           <h1 class="m-title">商品评价</h1>
-          <ratings-select :desc="desc" :selectType="selectType" :onlyContent="onlyContent" :ratings="food.ratings"></ratings-select>
+          <ratings-select @content-toggle="getContent" @rating-type="getType" :desc="desc" :selectType="selecttype" :onlyContent="onlycontent" :ratings="food.ratings"></ratings-select>
+          <div class="g-rating-wrap">
+            <ul class="g-list" v-if="food.ratings && food.ratings.length >0">
+              <li class="m-list-item" v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings">
+                <div class="m-user">
+                  <span class="u-name">{{rating.username}}</span>
+                  <img class="u-avatar" width="12" height="12" :src="rating.avatar">
+                </div>
+                <div class="m-time">
+                  {{formatDate(rating.rateTime)}}
+                </div>
+                <p class="m-text">
+                  <span v-show="rating.rateType === 0" class="icon-thumb_up"></span>
+                  <span v-show="rating.rateType === 1" class="icon-thumb_down"></span>{{rating.text}}
+                </p>
+              </li>
+            </ul>
+            <div class="no-rating" v-else>暂无评论</div>
+          </div>
         </div>
       </div>
     </div>
@@ -44,7 +62,8 @@
   import Cartcontroller from "../../components/cartcontroller/cartcontroller.vue";
   import Split from "../../components/split/split.vue";
   import RatingsSelect from "../../components/ratings-select/index.vue"
-  import {ratingSelect} from "../../utils/utils"
+  import {ratingSelect} from "../../utils/utils";
+  import {DateUtil} from "../../common/js/date.js"
 
   export default {
     components: {
@@ -61,8 +80,8 @@
       return {
         pageShow: false,
         ratingSelect,
-        selectType: ratingSelect.ALL,
-        onlyContent: true,
+        selecttype: ratingSelect.ALL,
+        onlycontent: true,
         desc: {
           all: '全部',
           positive: '推荐',
@@ -75,8 +94,8 @@
     methods: {
       show() {
         this.pageShow = true;
-        this.selectType = this.ratingSelect.ALL;
-        this.onlyContemt = true;
+        this.selecttype = this.ratingSelect.ALL;
+        this.onlycontent = true;
         this.$nextTick(() => {
           if (!this.scroll) {
             this.scroll = new BScroll(this.$refs.food, {
@@ -99,12 +118,39 @@
       },
       add(event) {
         this.$emit('add-cart', event);
+      },
+      getType(type) {
+        this.selecttype = type;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        })
+      },
+      getContent(onlyContent) {
+        this.onlycontent = onlyContent;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        })
+      },
+      needShow(type, text) {
+        if (this.onlycontent && !text) {
+          return false;
+        }
+        if (this.selecttype === this.ratingSelect.ALL) {
+          return true;
+        } else {
+          return type === this.selecttype;
+        }
+      },
+      formatDate(time) {
+        let date = new Date(time);
+        return DateUtil(date, 'yyyy-MM-dd hh:mm:ss');
       }
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin.styl"
   .food-page {
     position: fixed;
     top: 0;
@@ -233,6 +279,62 @@
           line-height: 14px;
           font-size: 14px;
           color: rgb(7, 17, 27);
+        }
+        .g-rating-wrap {
+          padding: 0 18px;
+
+          .g-list {
+            .m-list-item {
+              position: relative;
+              padding: 16px 0;
+              border-px(rgba(7, 17, 27, 0.1), 1px);
+              .m-user {
+                position: absolute;
+                right: 0;
+                top: 16px;
+                font-size: 0;
+                line-height: 12px;
+                .u-name {
+                  display: inline-block;
+                  margin-right: 6px;
+                  vertical-align: top;
+                  font-size: 10px;
+                  color: rgb(147, 153, 159);
+                }
+                .u-avatar {
+                  border-radius: 50%;
+                }
+              }
+              .m-time {
+                margin-bottom: 6px;
+                font-size: 10px;
+                line-height: 12px;
+                color: rgb(147, 153, 159);
+              }
+              .m-text {
+                line-height: 16px;
+                font-size: 12px;
+                color: rgb(7, 17, 27);
+                .icon-thumb_up {
+                  line-height: 16px;
+                  margin-right: 4px;
+                  font-size: 12px;
+                  color: rgb(0, 166, 220);
+                }
+                .icon-thumb_down {
+                  line-height: 16px;
+                  margin-right: 4px;
+                  font-size: 12px;
+                  color: rgb(147, 153, 159);
+                }
+              }
+            }
+          }
+          .no-rating {
+            padding: 16px 0;
+            font-size: 12px;
+            color: rgb(147, 153, 159);
+          }
         }
       }
     }
