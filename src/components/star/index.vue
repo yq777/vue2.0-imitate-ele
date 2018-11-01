@@ -55,7 +55,7 @@
   .g-star {
     display: flex;
     .m-star-item {
-      margin-right: 22px;
+      margin-right: 5px;
     }
     &.star-48 {
       .on {
@@ -72,7 +72,7 @@
       }
     }
     &.star-36 {
-      margin-right: 22px;
+      margin-right: 5px;
       .on {
         bg-image('star36_on', 15px, 15px)
       }
