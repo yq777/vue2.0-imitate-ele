@@ -1,6 +1,6 @@
 import {ajaxGet} from "../utils/instance";
 
-export const getSellers = () => ajaxGet('/api/seller');
+export const getSellers = (id) => ajaxGet('/api/seller', {id});
 
 export const getGoods = () => ajaxGet('/api/goods');
 

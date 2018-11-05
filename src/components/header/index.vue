@@ -130,7 +130,7 @@
           justify-content: center;
           margin: 2px 0 8px 0;
           .u-brand {
-            bg-image("brand", 30px, 18px);
+            bg-image("~assets/img/brand", 30px, 18px);
           }
           .u-name {
             margin-left: 6px;
@@ -150,19 +150,19 @@
           .u-icon {
             margin-right: 4px;
             &.decrease {
-              bg-image("decrease_1", 12px, 12px)
+              bg-image("~assets/img/decrease_1", 12px, 12px)
             }
             &.discount {
-              bg-image("discount_1", 12px, 12px)
+              bg-image("~assets/img/discount_1", 12px, 12px)
             }
             &.guarantee {
-              bg-image("guarantee_1", 12px, 12px)
+              bg-image("~assets/img/guarantee_1", 12px, 12px)
             }
             &.invoice {
-              bg-image("invoice_1", 12px, 12px)
+              bg-image("~assets/img/invoice_1", 12px, 12px)
             }
             &.special {
-              bg-image("special_1", 12px, 12px)
+              bg-image("~assets/img/special_1", 12px, 12px)
             }
           }
           .u-text {
@@ -197,7 +197,7 @@
       background: rgba(7, 17, 27, 0.2)
       .m-bulletin-title {
         flex: 0 0 22px
-        bg-image("bulletin", 22px, 12px)
+        bg-image("~assets/img/bulletin", 22px, 12px)
       }
       .m-bulletin-text {
         height: 28px;
@@ -288,19 +288,19 @@
               .u-icon {
                 margin-right: 6px;
                 &.decrease {
-                  bg-image("decrease_2", 16px, 16px)
+                  bg-image("~assets/img/decrease_2", 16px, 16px)
                 }
                 &.discount {
-                  bg-image("discount_2", 16px, 16px)
+                  bg-image("~assets/img/discount_2", 16px, 16px)
                 }
                 &.guarantee {
-                  bg-image("guarantee_2", 16px, 16px)
+                  bg-image("~assets/img/guarantee_2", 16px, 16px)
                 }
                 &.invoice {
-                  bg-image("invoice_2", 16px, 16px)
+                  bg-image("~assets/img/invoice_2", 16px, 16px)
                 }
                 &.special {
-                  bg-image("special_2", 16px, 16px)
+                  bg-image("~assets/img/special_2", 16px, 16px)
                 }
               }
               .u-text {
