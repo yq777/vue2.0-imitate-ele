@@ -206,19 +206,19 @@
           .u-icon {
             margin-right: 2px;
             &.decrease {
-              bg-image("decrease_3", 12px, 12px)
+              bg-image("~assets/img/decrease_3", 12px, 12px)
             }
             &.discount {
-              bg-image("discount_3", 12px, 12px)
+              bg-image("~assets/img/discount_3", 12px, 12px)
             }
             &.guarantee {
-              bg-image("guarantee_3", 12px, 12px)
+              bg-image("~assets/img/guarantee_3", 12px, 12px)
             }
             &.invoice {
-              bg-image("invoice_3", 12px, 12px)
+              bg-image("~assets/img/invoice_3", 12px, 12px)
             }
             &.special {
-              bg-image("special_3", 12px, 12px)
+              bg-image("~assets/img/special_3", 12px, 12px)
             }
           }
         }
