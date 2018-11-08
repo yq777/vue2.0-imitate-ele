@@ -44,7 +44,8 @@
               <div class="u-line"></div>
             </div>
             <ul v-if="seller.supports" class="m-supports">
-              <li class="support-item" v-for="(item,index) in seller.supports" :class="{last_child:index === seller.supports.length - 1}" :key="index">
+              <li class="support-item" v-for="(item,index) in seller.supports"
+                  :class="{last_child:index === seller.supports.length - 1}" :key="index">
                 <span class="u-icon" :class="classMap[item.type]"></span>
                 <span class="u-text">{{item.description}}</span>
               </li>
@@ -112,7 +113,7 @@
     position: relative
     color: #fff;
     background: rgba(7, 17, 27, 0.5);
-    overflow: hidden
+    overflow: hidden;
     .g-content-wrapper {
       position: relative
       padding 24px 12px 18px 24px;
@@ -222,8 +223,8 @@
       z-index: -1;
       filter: blur(10px)
     }
-    .fade-enter-active, fade-leave-active {
-      opacity: 1;
+    .fade-enter-active, .fade-leave-active {
+      transition: all 0.5s;
       background: rgba(7, 17, 27, 0.8);
     }
     .fade-enter, .fade-leave-to {
@@ -234,12 +235,11 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 100;
+      z-index: 200;
       height: 100%;
       width: 100%;
       overflow: auto;
       background: rgba(7, 17, 27, 0.8);
-      transition: all 0.5s;
       -webkit-backdrop-filter: blur(10px);
       .g-detail-wrapper {
         min-height: 100%;
@@ -327,6 +327,7 @@
         margin: -64px auto 0 auto;
         clear: both;
         font-size: 32px
+        z-index: 100
         .icon-close {
 
         }
