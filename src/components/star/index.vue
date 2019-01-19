@@ -59,13 +59,13 @@
     }
     &.star-48 {
       .on {
-        bg-image('star48_on', 20px, 20px);
+        bg-image('~assets/img/star48_on', 20px, 20px);
       }
       .half {
-        bg-image('star48_half', 20px, 20px);
+        bg-image('~assets/img/star48_half', 20px, 20px);
       }
       .off {
-        bg-image('star48_off', 20px, 20px);
+        bg-image('~assets/img/star48_off', 20px, 20px);
       }
       .last-child {
         margin-right: 0
@@ -74,13 +74,13 @@
     &.star-36 {
       margin-right: 5px;
       .on {
-        bg-image('star36_on', 15px, 15px)
+        bg-image('~assets/img/star36_on', 15px, 15px)
       }
       .half {
-        bg-image('star36_half', 15px, 15px)
+        bg-image('~assets/img/star36_half', 15px, 15px)
       }
       .off {
-        bg-image('star36_off', 15px, 15px)
+        bg-image('~assets/img/star36_off', 15px, 15px)
       }
       .last-child {
         margin-right: 0
@@ -89,13 +89,13 @@
     &.star-24 {
       margin-right: 3px;
       .on {
-        bg-image('star24_on', 10px, 10px)
+        bg-image('~assets/img/star24_on', 10px, 10px)
       }
       .half {
-        bg-image('star24_half', 10px, 10px)
+        bg-image('~assets/img/star24_half', 10px, 10px)
       }
       .off {
-        bg-image('star24_off', 10px, 10px)
+        bg-image('~assets/img/star24_off', 10px, 10px)
       }
       .last-child {
         margin-right: 0
